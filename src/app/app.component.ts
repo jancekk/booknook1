@@ -1,10 +1,18 @@
 import { Component } from '@angular/core';
+import { Book } from './book.model';
+import { BooksService } from './books.service';
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
+  styleUrls: ['./app.component.css'],
+  providers: [BooksService]
+  
 })
 export class AppComponent {
-  title = 'booknook1';
+  addBook(book: Book): void {
+
+  }
+  constructor(private booksService: BooksService){}
+  books: Book[] = this.booksService.books;
 }

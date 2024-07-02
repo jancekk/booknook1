@@ -1,0 +1,28 @@
+.card {
+    position: relative; /* Postavljamo relativnu poziciju za pozicioniranje u odnosu na karticu */
+    margin-bottom: 12px; /* Dodajemo razmak između kartica */
+  }
+  
+  .genre-container {
+    position: relative; /* Postavljamo relativnu poziciju kako bi apsolutno pozicionirali log-button */
+    background-color: #f0f0f0;
+    padding: 8px;
+    border-radius: 4px;
+  }
+  
+  .log-button {
+    position: absolute;
+    bottom: 5px;
+    right: 5px;
+    padding: 6px 12px;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+  }
+  
+  .log-button:hover {
+    background-color: #0056b3;
+  }
+  

@@ -13,6 +13,4 @@ export class AppComponent {
   addBook(book: Book): void {
 
   }
-  constructor(private booksService: BooksService){}
-  books: Book[] = this.booksService.books;
 }

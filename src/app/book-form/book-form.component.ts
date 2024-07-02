@@ -24,6 +24,6 @@ export class BookFormComponent{
        console.log('Book added');
        this.fullBook = `${this.text} - ${this.author}`;
        /* this.addedBook.emit(new Book(this.text, this.author,this.description)) */
-       this.booksService.addBook(new Book(this.text, this.author,this.description, this.genre));
+       this.booksService.addBook(new Book(this.text, this.author,this.description, this.genre, '', ''));
     }
 }

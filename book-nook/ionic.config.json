@@ -1,0 +1,7 @@
+{
+  "name": "BookNook",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular"
+}

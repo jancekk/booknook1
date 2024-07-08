@@ -1,0 +1,69 @@
+<ion-app>
+  <ion-menu side="start"  contentId="main" ontentId="main-content">
+    <ion-header>
+      <ion-toolbar>
+        <ion-title>BookNook</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-content>
+    <ion-list lines="none">
+      <ion-menu-toggle>
+        <ion-item routerLink="/book-nook">
+          <ion-icon name="person-circle" slot="start"></ion-icon>
+          <ion-label>home</ion-label>
+        </ion-item>
+      </ion-menu-toggle>
+      <ion-menu-toggle>
+      <ion-item>
+        <ion-icon name="person-circle" slot="start"></ion-icon>
+        <ion-label>my profile</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle>
+      <ion-item routerLink="/to-read">
+        <ion-icon name="document-text" slot="start"></ion-icon>
+        <ion-label>to read</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+    <ion-menu-toggle>
+      <ion-item routerLink="/my-books">
+        <ion-icon name="happy" slot="start"></ion-icon>
+        <ion-label>my books</ion-label>
+      </ion-item>
+    </ion-menu-toggle >
+    <ion-menu-toggle>
+      <ion-item  (click)="onLogout()">
+        <ion-icon name="log-out" slot="start"></ion-icon>
+        <ion-label>log out</ion-label>
+      </ion-item>
+    </ion-menu-toggle>
+    </ion-list>
+  </ion-content>
+  </ion-menu>
+  
+    
+  
+   
+    <ion-router-outlet id="main"></ion-router-outlet>
+    <!-- <ion-tabs>
+      
+      <ion-tab-bar slot="bottom">
+        <ion-tab-button tab="book-nook">
+          <ion-icon name="person-circle" aria-hidden="true"></ion-icon>
+          <ion-label>BookNook</ion-label>
+        </ion-tab-button>
+    
+        <ion-tab-button tab="to-read">
+          <ion-icon name="text" aria-hidden="true"></ion-icon>
+          <ion-label>to read</ion-label>
+        </ion-tab-button>
+    
+        <ion-tab-button tab="my-books">
+          <ion-icon name="happy" aria-hidden="true"></ion-icon>
+          <ion-label>my books</ion-label>
+        </ion-tab-button>
+    
+        
+      </ion-tab-bar>
+    </ion-tabs> -->
+</ion-app>

@@ -1,0 +1,11 @@
+<ng-container *ngFor="let book of books">
+    <app-book-element *ngIf="book.genre === 'fiction' && !book.review && !book.stars"
+                  [author]="book.author"
+                  [text]="book.text"
+                  [description]="book.description"
+                  [genre]="book.genre"
+                  [review]="book.review"
+                  [stars]="book.stars">
+</app-book-element>
+
+  </ng-container>

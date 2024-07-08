@@ -1,0 +1,37 @@
+<div class="column is-centered">
+    <div class="column is-half">
+        <div class="box">
+            <h3 class="title">Add a book!</h3>
+            <div class="field">
+                <label class="label">Book</label>
+                <div class="control">
+                    <input class="input" type="text" [(ngModel)]="text">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Author</label>
+                <div class="control">
+                    <input class="input" type="text" [(ngModel)]="author">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Description</label>
+                <div class="control">
+                    <input class="input" type="text" [(ngModel)]="description">
+                </div>
+            </div>
+
+            <div class="field">
+                <label class="label">Genre (fiction or non-fiction)</label>
+                <div class="control">
+                    <input class="input" type="text" [(ngModel)]="genre">
+                </div>
+            </div>
+
+            <p class="title" [innerText]="fullBook"></p>
+            <button class="button is-link" (click)="onAddBook()">Add book</button>
+        </div>
+    </div>
+</div>

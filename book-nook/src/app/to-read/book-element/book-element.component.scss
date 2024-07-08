@@ -1,0 +1,10 @@
+.genre-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .log-button {
+    --border-radius: 8px; /* Example of Ionic custom property */
+  }
+  

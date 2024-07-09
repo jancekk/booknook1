@@ -7,6 +7,7 @@ import { IonicModule } from '@ionic/angular';
 import { ToReadPageRoutingModule } from './to-read-routing.module';
 
 import { ToReadPage } from './to-read.page';
+import { BookElementComponent } from './book-element/book-element.component';
 
 @NgModule({
   imports: [
@@ -15,6 +16,6 @@ import { ToReadPage } from './to-read.page';
     IonicModule,
     ToReadPageRoutingModule
   ],
-  declarations: [ToReadPage]
+  declarations: [ToReadPage, BookElementComponent]
 })
 export class ToReadPageModule {}

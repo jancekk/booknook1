@@ -1,40 +1,35 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="primary">
     <ion-buttons slot="start">
-      <ion-menu-button>
-        
-      </ion-menu-button>
+      <ion-menu-button></ion-menu-button>
     </ion-buttons>
-    
-    <ion-title>to read</ion-title>
+    <ion-title>To Read</ion-title>
   </ion-toolbar>
 </ion-header>
+
 <ion-content>
   <ion-list>
     <ion-item>
       <ion-label>Filter by Genre:</ion-label>
       <ion-select [(ngModel)]="selectedGenre" (ionChange)="filterBooksByGenre(selectedGenre)" (ionCancel)="handleCancel()" (ionDismiss)="handleDismiss()">
-        <ion-select-option value="All Books">all books</ion-select-option>
+        <ion-select-option value="All Books">All Books</ion-select-option>
         <ion-select-option *ngFor="let genre of genres" [value]="genre">
           {{ genre }}
         </ion-select-option>
       </ion-select>
     </ion-item>
 
-    
-      <ng-container *ngFor="let book of filteredBooks">
-        <ng-container *ngIf="selectedGenre === 'All Books' || (book.genre === selectedGenre && !book.review && !book.stars)">
+    <ng-container *ngFor="let book of filteredBooks">
       <app-book-element
-                        [author]="book.author"
-                        [text]="book.text"
-                        [description]="book.description"
-                        [genre]="book.genre"
-                        [review]="book.review"
-                        [stars]="book.stars"
-                        [imageUrl]="book.imageUrl"
-                        ion-router-link [routerLink]="['/', 'books', book.id]">
+        [author]="book.author"
+        [text]="book.text"
+        [description]="book.description"
+        [genre]="book.genre"
+        [review]="book.review"
+        [stars]="book.stars"
+        [imageUrl]="book.imageUrl"
+        [routerLink]="['/to-read', book.id]">
       </app-book-element>
     </ng-container>
-      </ng-container>
   </ion-list>
 </ion-content>

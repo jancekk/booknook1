@@ -6,8 +6,13 @@ import { ToReadPage } from './to-read.page';
 const routes: Routes = [
   {
     path: '',
-    component: ToReadPage
+    component: ToReadPage, 
+    
   },
+  {
+    path: ':bookId',
+    loadChildren: () => import('./book-details/book-details.module').then( m => m.BookDetailsPageModule)
+  }
   
   
 

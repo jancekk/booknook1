@@ -31,7 +31,7 @@ export class AddbookModalComponent  implements OnInit {
     if(!this.form.valid){
       return;
     } else {
-      this.modalCtrl.dismiss({bookData:{title: this.form.value['title'], description: this.form.value['description'], author: this.form.value['author'], genre: this.form.value['genre']}}, 'confirm');
+      this.modalCtrl.dismiss({bookData:{text: this.form.value['text'], description: this.form.value['description'], author: this.form.value['author'], genre: this.form.value['genre']}}, 'confirm');
     }
   }
 }

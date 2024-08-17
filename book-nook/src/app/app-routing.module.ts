@@ -25,13 +25,11 @@ const routes: Routes = [
     loadChildren: () => import('./book-nook/book-nook.module').then( m => m.BookNookPageModule),
     canActivate: [AuthGuard]
   },
+  
   {
-    path: 'book-details',
-    loadChildren: () => import('./to-read/fiction/book-details/book-details.module').then( m => m.BookDetailsPageModule)
-  },
-  {
-    path: 'book-details/:id', 
-    loadChildren: () => import('./to-read/fiction/book-details/book-details.module').then(m => m.BookDetailsPageModule)
+    path: 'to-read/:id', 
+    loadChildren: () => import('./to-read/book-details/book-details.module').then(m => m.BookDetailsPageModule),
+    canActivate: [AuthGuard]
   },
   {
     path: 'log-in',
@@ -40,6 +38,11 @@ const routes: Routes = [
   {
     path: 'register',
     loadChildren: () => import('./auth/register/register.module').then( m => m.RegisterPageModule)
+  },
+  {
+    path: 'my-profile',
+    loadChildren: () => import('./my-profile/my-profile.module').then( m => m.MyProfilePageModule),
+    canActivate: [AuthGuard]
   }
 ];
 

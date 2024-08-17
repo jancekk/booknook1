@@ -10,25 +10,29 @@ import { NgForm } from '@angular/forms';
 })
 export class LogInPage implements OnInit {
   isLoading = false;
+
   constructor(private authService: AuthService, private router: Router) { }
 
-  ngOnInit() {
+  ngOnInit() { }
+
+  onLogIn(form: NgForm) {
+    this.isLoading = true;
+
+    console.log(form);
+    this.authService.login(form.value).subscribe(resData => {
+      console.log('Login successful');
+      console.log(resData);
+      this.isLoading = false;
+      this.router.navigateByUrl('/book-nook');
+    },
+    error => {
+      console.log('Login error:', error);
+      this.isLoading = false;
+    });
   }
 
-  onLogIn(form: NgForm){
-      this.isLoading = true;
-
-      console.log(form);
-      this.authService.login(form.value).subscribe(resData => {
-        console.log('prijava uspesna');
-        console.log(resData);
-        this.isLoading = false;
-        this.router.navigateByUrl('/book-nook');
-      },
-      error => {
-        console.log('Login error:', error); 
-        
-      });
-      
+  onRegister() {
+    // Navigate to the registration page
+    this.router.navigateByUrl('/register');
   }
 }

@@ -1,98 +1,176 @@
-import { Injectable } from '@angular/core';
-import { Book, Genre } from './book.model';
-import { HttpClient } from '@angular/common/http';
-import { AuthService } from '../auth/auth.service';
-import { take, switchMap, BehaviorSubject, tap, map, Observable } from 'rxjs';
 
+
+import { Injectable } from '@angular/core';
+import { BehaviorSubject, Observable, map, switchMap, take, tap, throwError } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Book } from './book.model';
+import { AuthService } from '../auth/auth.service';
+import { catchError} from 'rxjs/operators'; 
 
 interface BookData {
+  id: string;
   author: string;
   text: string;
   genre: Genre;
   description: string;
-  userId: string;
   imageUrl: string;
+  userId: string;
+  review: string;
+  stars: string;
 }
+
+export enum Genre {
+  Fiction = 'Fiction',
+  NonFiction = 'Non-Fiction',
+  Fantasy = 'Fantasy',
+  ScienceFiction = 'Science Fiction',
+  Mystery = 'Mystery',
+  Romance = 'Romance',
+  Thriller = 'Thriller',
+  Biography = 'Biography',
+  History = 'History',
+  SelfHelp = 'Self-Help',
+  Philosophy = 'Philosophy',
+  Drama = 'Drama',
+  AllBooks = 'All Books'
+}
+
+
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class BooksService {
-  books: Book[] = [
-  ];
-  private _books = new BehaviorSubject<Book[]>([]);
+   books = new BehaviorSubject<Book[]>([]);
+   myBooks = new BehaviorSubject<Book[]>([]);
 
-  oldBooks: Book[] = [
-    {
-      id: 'c1',
-      author: 'Sylvia Plath',
-      text: 'The Bell Jar',
-      genre: Genre.Fiction,
-      description:
-        '"The Bell Jar" by Sylvia Plath is a semi-autobiographical novel that delves into ' +
-        'the mental health struggles of its protagonist, Esther Greenwood. Set in the 1950s, ' +
-        'it follows Esther\'s descent into depression and her experiences with societal expectations, ' +
-        'relationships, and the treatment of women. Plath\'s poignant narrative explores themes ' +
-        'of identity, alienation, and the pressures of conformity in a vivid and introspective manner.',
-        userId: '', 
-      imageUrl:
-        'https://target.scene7.com/is/image/Target/GUEST_3d59fce0-9740-4a9f-a9a6-55b6ba4fa374?wid=488&hei=488&fmt=pjpeg',
-      review: '',
-      stars: ''
-    },
-  ]
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  constructor(private http: HttpClient, private authService: AuthService){
+ 
+  
 
+
+addBook(author: string, text: string, genre: Genre, description: string, imageUrl: string, review: string, stars: string){
+  let newBook: Book = {
+    id: '',
+    author,
+    text,
+    genre,
+    description,
+    userId: '', 
+    imageUrl: '',
+    stars: '',
+    review: ''
+  };
+
+  return this.authService.getUserId.pipe(
+    take(1),
+    switchMap(userId => {
+      newBook.userId = userId ?? ''; 
+
+      return this.authService.token.pipe(
+        take(1),
+        switchMap(token => {
+          return this.http.post<{ name: string }>(`https://booknook-dc570-default-rtdb.firebaseio.com/books.json?auth=${token}`, newBook);
+        }),
+        switchMap(response => {
+          newBook.id = response.name; 
+          return this.myBooks.pipe(
+            take(1),
+            map(books => books.concat(newBook))
+          );
+        }),
+        tap(updatedBooks => {
+          this.myBooks.next(updatedBooks); 
+        })
+      
+      );
+    })
+  );
+
+}
+ 
+editBook(
+  id: string | null,
+  author: string,
+  text: string,
+  genre: Genre,
+  description: string,
+  imageUrl: string,
+  userId: string,
+  review: string,
+  stars: string
+) {
+  if (!id) {
+    throw new Error('Book ID is required');
   }
 
+  
+  const updatedBook: Book = { id, author, text, genre, description, imageUrl, userId, review, stars };
 
-  addBook(author: string, text: string, genre: Genre, description: string) {
-    let newBook: Book = {
-      id: '',
-      author,
-      text,
-      genre,
-      description,
-      userId: '', // Initialize userId
-      imageUrl: '',
-      stars: '',
-      review: ''
-    };
+  
+return this.authService.token.pipe(
+  take(1),
+  switchMap(token => {
+    if (!token) {
+      throw new Error('Authentication token is missing');
+    }
 
-    // Retrieve user ID from AuthService
-    return this.authService.userId.pipe(
-      take(1),
-      switchMap(userId => {
-        newBook.userId = userId ?? ''; // Assign userId to newBook
+    
+    return this.http.put(`https://booknook-dc570-default-rtdb.firebaseio.com/books/${id}.json?auth=${token}`, updatedBook);
+  }),
+  switchMap(() => {
+   
+    return this.myBooks.pipe(take(1));
+  }),
+  map(books => {
+   
+    const updatedBooks = books.map(b => b.id === id ? { ...b, ...updatedBook, id } : b);
+    return updatedBooks;
+  }),
+  tap(updatedBooks => {
+    
+    this.myBooks.next(updatedBooks);
+  }),
+  switchMap(() => this.getBooks()), 
+      tap(() => {
+        
+      }),
+  catchError(error => {
+    
+    console.error('Error updating book:', error);
+    return throwError(error);
+  })
+);
+}
 
-        // Retrieve authentication token from AuthService
-        return this.authService.token.pipe(
-          take(1),
-          switchMap(token => {
-            const headers = { Authorization: `Bearer ${token}` }; // Include token in headers
 
-            // Make HTTP POST request to Firebase with the new book data and headers
-            return this.http.post<{ name: string }>('https://booknook-dc570-default-rtdb.firebaseio.com/books.json', newBook, { headers });
-          }),
-          tap(resData => {
-            newBook.id = resData.name; // Assign generated ID to newBook
-            this.books.push(newBook); // Add newBook to local books array
-          })
-        );
-      })
-    );
-  }
+deleteBook(id: string | null) {
+  return this.authService.token.pipe(
+    take(1),
+    switchMap(token => {
+      return this.http.delete<{ name: string }>(`https://booknook-dc570-default-rtdb.firebaseio.com/books/${id}.json?auth=${token}`);
+    }),
+    switchMap(() => {
+      return this.myBooks;
+    }),
+    take(1),
+    tap(books => {
+      const updatedBooks = books.filter(b => b.id !== id);
+      this.myBooks.next(updatedBooks);
+    })
+  );
+}
 
 
-  getBooks(){
+  getBooks() : Observable<Book[]>{
     return this.authService.token.pipe(
       take(1),
       switchMap((token) => {
-        const url = `https://booknook-dc570-default-rtdb.firebaseio.com/books.json?auth=${token}`; // Interpolate token in URL
+        const url = `https://booknook-dc570-default-rtdb.firebaseio.com/books.json?auth=${token}`; 
 
-        // Make HTTP GET request to Firebase with token-authenticated URL
+        
         return this.http.get<{ [key: string]: BookData }>(url);
       }),
       map((booksData: { [key: string]: BookData }) => {
@@ -108,8 +186,8 @@ export class BooksService {
               description: bookData.description,
               userId: bookData.userId,
               imageUrl: bookData.imageUrl,
-              review: '',  
-              stars: ''
+              review: bookData.review,  
+              stars: bookData.stars
             };
             books.push(book);
           }
@@ -117,14 +195,47 @@ export class BooksService {
         return books;
       }),
       tap(books => {
-        this._books.next(books); // Update BehaviorSubject with fetched books
+        console.log('Updating books:', books);
+        this.books.next(books); 
+      })
+    );
+  }
+  
+  getBook(id: string){
+    return this.authService.token.pipe(
+      take(1),
+      switchMap((token) => {
+        
+        const url = `https://booknook-dc570-default-rtdb.firebaseio.com/books/${id}.json?auth=${token}`;
+        
+     
+        return this.http.get<BookData>(url);
+      }),
+      map((resData) => {
+        
+        return {
+          id,
+          author: resData.author,
+          text: resData.text,
+          genre: resData.genre,
+          description: resData.description,
+          userId: resData.userId,
+          imageUrl: resData.imageUrl,
+          review: resData.review,  
+          stars: resData.stars    
+        } as Book;
       })
     );
   }
 
+  
 
-  public getBook(id: string){
-    return this.oldBooks.find((b:Book)=> b.id === id);
+  get book(): Observable<Book[]> {
+    return this.books.asObservable();
+  }
+
+  get mybook(): Observable<Book[]> {
+    return this.myBooks.asObservable();
   }
 
   getGenres(): string[] {

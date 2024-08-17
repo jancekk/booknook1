@@ -3,7 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { environment } from 'src/environments/environment';
 
-import { BehaviorSubject, Observable, map, tap } from 'rxjs';
+import { BehaviorSubject, Observable, map, switchMap, take, tap } from 'rxjs';
 import { User } from './register/user.model';
 
 interface AuthResponseData {
@@ -47,11 +47,23 @@ export class AuthService {
       );
 }
 
-  get userId(){
+  get getUserId(){
     return this._user.asObservable().pipe(
       map((user: User | null) => {
         if (user) {
           return user.id;
+        } else {
+          return null;
+        }
+      })
+      );
+  }
+
+  get user(){
+    return this._user.asObservable().pipe(
+      map((user: User | null) => {
+        if (user) {
+          return user;
         } else {
           return null;
         }
@@ -104,6 +116,15 @@ export class AuthService {
     );
   }
 
+  getUser(id: string): Observable<UserData> {
+    return this.http.get<UserData>(`https://booknook-dc570-default-rtdb.firebaseio.com/users/${id}.json`)
+      .pipe(
+        switchMap((userData) => {
+          return [userData]; // Returning an observable with the user data
+        }),
+        take(1)
+      );
+  }
   
 
 }

@@ -11,10 +11,10 @@ import { Book } from '../to-read/book.model';
   styleUrls: ['./book-nook.page.scss'],
 })
 export class BookNookPage implements OnInit {
-  books : Book[];
+  books : Book[]=[];
 
   constructor(private modalCtrl : ModalController, private booksService : BooksService) {
-    this.books = this.booksService.books;
+    
    }
 
   ngOnInit() {
@@ -50,9 +50,9 @@ export class BookNookPage implements OnInit {
   }).then((resultData : OverlayEventDetail<any> ) =>{
     if (resultData.role === 'confirm') {
       console.log(resultData);
-      let {author, title, genre, description} = resultData.data.bookData;
-      this.booksService.addBook(author, title, genre, description).subscribe(res => {
-        console.log('Book added successfully:', res);
+      let {id, author, text, genre, description, imageUrl, userId} = resultData.data.bookData;
+      this.booksService.addBook(author, text, genre, description, imageUrl,'','').subscribe(res => {
+        console.log('Book added successfully:', res, text);
       }, error => {
         console.error('Error adding book:', error);
       });
@@ -62,5 +62,3 @@ export class BookNookPage implements OnInit {
   );
   }
  }
-
-

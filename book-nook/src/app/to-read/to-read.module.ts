@@ -16,6 +16,7 @@ import { BookElementComponent } from './book-element/book-element.component';
     IonicModule,
     ToReadPageRoutingModule
   ],
-  declarations: [ToReadPage, BookElementComponent]
+  declarations: [ToReadPage, BookElementComponent],
+  exports: [BookElementComponent]
 })
 export class ToReadPageModule {}

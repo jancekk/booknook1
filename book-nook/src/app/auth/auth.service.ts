@@ -120,7 +120,7 @@ export class AuthService {
     return this.http.get<UserData>(`https://booknook-dc570-default-rtdb.firebaseio.com/users/${id}.json`)
       .pipe(
         switchMap((userData) => {
-          return [userData]; // Returning an observable with the user data
+          return [userData]; 
         }),
         take(1)
       );

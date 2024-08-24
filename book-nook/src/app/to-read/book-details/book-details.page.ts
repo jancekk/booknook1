@@ -4,6 +4,7 @@ import { AlertController, ModalController } from '@ionic/angular';
 import { Book, Genre } from '../book.model';
 import { BooksService } from '../books.service';
 import { LogBookModalComponent } from '../log-book-modal/log-book-modal.component';
+import { MyProfilePage } from './../../my-profile/my-profile.page';
 
 @Component({
   selector: 'app-book-details',
@@ -15,6 +16,7 @@ export class BookDetailsPage implements OnInit {
   canDismiss: boolean = true;
   book!: Book;
   isLoading: boolean = true;
+  MyProfilePage: any;
 
   constructor(
     private route: ActivatedRoute,
@@ -62,7 +64,7 @@ export class BookDetailsPage implements OnInit {
           handler: async () => {
             try {
               await this.booksService.deleteBook(this.book.id).toPromise();
-              // Optionally navigate away or update UI
+              this.MyProfilePage.loadBookStatistics();
               console.log('Book deleted successfully');
             } catch (error) {
               console.error('Error deleting book:', error);
@@ -187,7 +189,7 @@ export class BookDetailsPage implements OnInit {
               this.book.review = '';
               this.book.stars = '';
               await this.booksService.editBook(this.book.id, this.book.author, this.book.text, this.book.genre, this.book.description, this.book.imageUrl, this.book.userId, this.book.review, this.book.stars).toPromise();
-            
+              this.MyProfilePage.loadBookStatistics();
               console.log('Review deleted successfully');
             } catch (error) {
               console.error('Error deleting review:', error);
@@ -228,6 +230,7 @@ export class BookDetailsPage implements OnInit {
               this.book.stars = updatedStars;
               await this.booksService.editBook(this.book.id, this.book.author, this.book.text, this.book.genre, this.book.description, this.book.imageUrl, this.book.userId, updatedReview, updatedStars).toPromise();
               this.booksService.getBooks();
+              this.MyProfilePage.loadBookStatistics();
               console.log('Book updated successfully in Firebase', updatedStars);
             } catch (error) {
               console.error('Error updating book in Firebase:', error);

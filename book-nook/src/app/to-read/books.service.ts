@@ -59,7 +59,7 @@ addBook(author: string, text: string, genre: Genre, description: string, imageUr
     genre,
     description,
     userId: '', 
-    imageUrl: '',
+    imageUrl: 'https://angelbookhouse.com/assets/front/img/product/edition_placeholder.png',
     stars: '',
     review: ''
   };

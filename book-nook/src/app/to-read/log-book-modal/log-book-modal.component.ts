@@ -13,7 +13,7 @@ export class LogBookModalComponent {
 
   constructor(
     private modalCtrl: ModalController,
-    private bookService: BooksService // Inject your BookService
+    private bookService: BooksService 
   ) {}
 
   async saveChanges() {
